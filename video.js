@@ -11,6 +11,15 @@ const time = (second) => {
 
     return `${years} year(s) ${days} day(s) ${hours} hour(s) ${minutes} minute(s) ${remainingSeconds} second(s)`
 }
+// ! function two
+
+const showCategory= async(id)=>{
+
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    const data = await res.json()
+    displayVideos(data.category)
+
+}
 
 
 const loadData = async () => {
@@ -42,6 +51,7 @@ const videoLoad = async () => {
 
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video')
+    videoContainer.innerHTML = ''
     videos.forEach(video => {
 
         const card = document.createElement('div')
@@ -100,9 +110,6 @@ const displayVideos = (videos) => {
 
 
 
-
-
-
 // ! video load /................................................................................../.
 
 
@@ -113,12 +120,13 @@ const displayData = (data) => {
     data.forEach(item => {
         // ! create button 
 
-        const btn = document.createElement('button')
-        btn.classList = 'btn'
-        btn.innerText = item.category
-
+        const btnDiv = document.createElement('div')
+        btnDiv.innerHTML = `
+        <button onclick="showCategory(${item.category_id})" class="btn">${item.category}</button>
+        
+        `
         // ! add btn to category container 
-        categoryContainer.append(btn)
+        categoryContainer.append(btnDiv)
 
 
 
