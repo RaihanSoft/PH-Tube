@@ -1,4 +1,14 @@
 // ! Load all the Catagory Button From API and Show them in a centered position
+
+// !onclick 
+const category= async(id)=>{
+  const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+  const data = await res.json()
+  displayVideo(data.category)
+  
+}
+// !onclick end
+
 const loadCategory= async()=>{
     const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     const data = await res.json()
@@ -7,31 +17,35 @@ const loadCategory= async()=>{
 displayCategory=(datas)=>{
     const navContainer = document.getElementById('nav')
     datas.forEach(data => {
-        const btn = document.createElement('button')
-        btn.classList = "btn"
-        btn.innerHTML = data.category
-        navContainer.append(btn)
+        const btnDiv = document.createElement('div')
+        btnDiv.innerHTML = `
+
+        <button class='btn' onclick=(category(${data.category_id})) >
+        ${data.category}
+        
+        </button>
+        
+        
+        
+        `
+        navContainer.append(btnDiv)
     })
 }
 
-const demo = {
-    "category_id": "1001",
-    "video_id": "aaaa",
-    "thumbnail": "https://i.ibb.co/L1b6xSq/shape.jpg",
-    "title": "Shape of You",
-    "authors": [
-        {
-            "profile_picture": "https://i.ibb.co/D9wWRM6/olivia.jpg",
-            "profile_name": "Olivia Mitchell",
-            "verified": ""
-        }
-    ],
-    "others": {
-        "views": "100K",
-        "posted_date": "16278"
-    },
-    "description": "Dive into the rhythm of 'Shape of You,' a captivating track that blends pop sensibilities with vibrant beats. Created by Olivia Mitchell, this song has already gained 100K views since its release. With its infectious melody and heartfelt lyrics, 'Shape of You' is perfect for fans looking for an uplifting musical experience. Let the music take over as Olivia's vocal prowess and unique style create a memorable listening journey."
+
+
+// ! time function 
+const time = (second) => {
+    const years = Math.floor(second / 31536000);                 // Calculate whole years
+    const days = Math.floor((second % 31536000) / 86400);        // Remaining days after extracting years
+    const hours = Math.floor((second % 86400) / 3600);           // Remaining hours after extracting days
+    const minutes = Math.floor((second % 3600) / 60);            // Remaining minutes after extracting hours
+    const remainingSeconds = Math.floor(second % 60);            // Remaining seconds
+
+   return `${years} year(s) ${days} day(s) ${hours} hour(s) ${minutes} minute(s) ${remainingSeconds} second(s)`
 }
+// ! time function end
+
 
 // ! Load all the videos from API 
 const loadVideo = async()=>{
@@ -41,6 +55,25 @@ const loadVideo = async()=>{
 }
 displayVideo=(datas)=>{
     const videoContainer = document.getElementById('videoContainer')
+    videoContainer.innerHTML = ""
+
+    if(datas.length === 0){
+        videoContainer.classList.remove('grid')
+        videoContainer.innerHTML = `
+        <div class="flex flex-col items-center justify-center ">
+        <img src="assets/icon.png">
+        <h2 class="font-bold text-3xl mt-4">NO Content Available</h2>
+        
+        </div>
+        
+        `
+    }
+    else{
+        videoContainer.classList.add('grid')
+
+    }
+
+
     datas.forEach(data=>{
         const card = document.createElement('div')
         card.classList = "card card-compact bg-base-100"
@@ -49,7 +82,7 @@ displayVideo=(datas)=>{
     class="h-full w-full object-cover "
       src="${data.thumbnail}"
       alt="Shoes" />
-      <span class=" absolute bg-black text-white p-2 bottom-2 right-2 " >${data.others.posted_date}</span>
+      <span class=" absolute text-xs bg-black text-white p-2 bottom-2 right-2 " >${time(data.others.posted_date)}</span>
   </figure>
 
   <div class="py-2 flex gap-2">

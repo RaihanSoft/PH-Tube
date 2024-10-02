@@ -52,6 +52,21 @@ const videoLoad = async () => {
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video')
     videoContainer.innerHTML = ''
+    if(videos.length === 0){
+        videoContainer.classList.remove('grid')
+
+        videoContainer.innerHTML = `
+        <div class="flex flex-col gap-2 items-center justify-center">
+
+        <img src="assets/icon.png">
+        <h2 class='text-2xl font-bold'>No content here in this category</h2>
+        </div>
+        `
+        return
+    }
+    else{
+        videoContainer.classList.add("grid")
+    }
     videos.forEach(video => {
 
         const card = document.createElement('div')
