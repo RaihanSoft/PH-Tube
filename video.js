@@ -1,6 +1,17 @@
 // ! show catagories on HTML 
 // * load Catagoris
 // * display categories data 
+// ! time function 
+const time = (second) => {
+    const years = Math.floor(second / 31536000);                 // Calculate whole years
+    const days = Math.floor((second % 31536000) / 86400);        // Remaining days after extracting years
+    const hours = Math.floor((second % 86400) / 3600);           // Remaining hours after extracting days
+    const minutes = Math.floor((second % 3600) / 60);            // Remaining minutes after extracting hours
+    const remainingSeconds = Math.floor(second % 60);            // Remaining seconds
+
+    return `${years} year(s) ${days} day(s) ${hours} hour(s) ${minutes} minute(s) ${remainingSeconds} second(s)`
+}
+
 
 const loadData = async () => {
     try {
@@ -27,27 +38,7 @@ const videoLoad = async () => {
     }
 
 }
-// ! card demo  start 
 
-const demo = {
-    "category_id": "1001",
-    "video_id": "aaab",
-    "thumbnail": "https://i.ibb.co/QPNzYVy/moonlight.jpg",
-    "title": "Midnight Serenade",
-    "authors": [
-        {
-            "profile_picture": "https://i.ibb.co/fDbPv7h/Noha.jpg",
-            "profile_name": "Noah Walker",
-            "verified": false
-        }
-    ],
-    "others": {
-        "views": "543K",
-        "posted_date": ""
-    },
-    "description": "'Midnight Serenade' by Noah Walker is a soulful journey into the depths of the night, capturing the mystique and allure of a moonlit evening. With 543K views, this song brings together tender melodies and evocative lyrics, making it a favorite among listeners seeking a contemplative yet uplifting experience. Immerse yourself in this musical masterpiece and feel the calm embrace of the night."
-}
-// ! demo end
 
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video')
@@ -61,7 +52,12 @@ const displayVideos = (videos) => {
       src="${video.thumbnail}"
       class="h-full object-cover"
       alt="Shoes" />
-      <span class="absolute right-8 bg-black p-1 rounded text-white bottom-2 ">${video.others.posted_date}</span>
+
+   ${video.others.posted_date.length == 0 ? "" : `<span class="absolute text-xs right-8 bg-black p-1 rounded text-white bottom-2 ">${time(video.others.posted_date)}</span>`}
+
+
+
+
   </figure>
 
 
