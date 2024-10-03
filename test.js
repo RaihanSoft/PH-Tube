@@ -5,8 +5,23 @@ const category= async(id)=>{
   const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
   const data = await res.json()
   displayVideo(data.category)
+  RemoveActive()
+
+  const activeBtn = document.getElementById(`btn-${id}`)
+  activeBtn.classList.add('active')
+
+
   
 }
+
+const RemoveActive = ()=> {
+    const categoryBtn = document.getElementsByClassName('category-btn')
+    for(let btn of categoryBtn){
+        btn.classList.remove('active')
+    }
+
+}
+
 // !onclick end
 
 const loadCategory= async()=>{
@@ -20,7 +35,7 @@ displayCategory=(datas)=>{
         const btnDiv = document.createElement('div')
         btnDiv.innerHTML = `
 
-        <button class='btn' onclick=(category(${data.category_id})) >
+        <button id="btn-${data.category_id}" class='btn category-btn' onclick=(category(${data.category_id})) >
         ${data.category}
         
         </button>
@@ -118,12 +133,6 @@ displayVideo=(datas)=>{
 
     })
 }
-
-
-
-
-
-
 
 
 // ! function calls

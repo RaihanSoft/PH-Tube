@@ -13,11 +13,49 @@ const time = (second) => {
 }
 // ! function two
 
+const removeActive=()=>{
+    const btns = document.getElementsByClassName('category-btn')
+    for(let btn of btns){
+        btn.classList.remove("active")
+    }
+
+
+}
+const loadDetails= async (videoId)=>{
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`)
+    const data = await res.json()
+    displayDetails(data.video)
+
+
+}
+const displayDetails=(data)=>{
+    console.log(data)
+    const modalContent = document.getElementById('modalContent')
+    modalContent.innerHTML = `
+    
+    
+    <img src="${data.thumbnail}">
+    <p>${data.description}</p>
+
+
+    `
+    document.getElementById('modalId').click()
+
+
+}
+
+
 const showCategory= async(id)=>{
 
     const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     const data = await res.json()
     displayVideos(data.category)
+    
+    removeActive()
+
+
+    const activeBtn = document.getElementById(`btn-${id}`)
+    activeBtn.classList.add("active")
 
 }
 
@@ -104,7 +142,7 @@ const displayVideos = (videos) => {
 
 </div>
 
-  <p>${video.others.views} views</p>
+  <p> <button onclick="loadDetails('${video.video_id}')" class="btn btn-sm btn-error text-white">Details</button> </p>
 
   
   </div>
@@ -137,7 +175,9 @@ const displayData = (data) => {
 
         const btnDiv = document.createElement('div')
         btnDiv.innerHTML = `
-        <button onclick="showCategory(${item.category_id})" class="btn">${item.category}</button>
+        <button id="btn-${item.category_id}"
+         onclick="showCategory(${item.category_id})" 
+         class="btn category-btn">${item.category}</button>
         
         `
         // ! add btn to category container 
@@ -146,24 +186,8 @@ const displayData = (data) => {
 
 
 
-
-
-
     })
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
 
 
 
