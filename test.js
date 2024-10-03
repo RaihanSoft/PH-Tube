@@ -1,35 +1,58 @@
 // ! Load all the Catagory Button From API and Show them in a centered position
 
 // !onclick 
-const category= async(id)=>{
-  const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
-  const data = await res.json()
-  displayVideo(data.category)
-  RemoveActive()
+const category = async (id) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    const data = await res.json()
+    displayVideo(data.category)
+    RemoveActive()
 
-  const activeBtn = document.getElementById(`btn-${id}`)
-  activeBtn.classList.add('active')
+    const activeBtn = document.getElementById(`btn-${id}`)
+    activeBtn.classList.add('active')
 
 
-  
+
 }
 
-const RemoveActive = ()=> {
+const RemoveActive = () => {
     const categoryBtn = document.getElementsByClassName('category-btn')
-    for(let btn of categoryBtn){
+    for (let btn of categoryBtn) {
         btn.classList.remove('active')
     }
 
 }
 
+
+
+const showDetails = async (video) => {
+    console.log(video)
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${video}`)
+    const data = await res.json()
+    detailsData(data.video)
+}
+const detailsData=(data)=>{
+    console.log(data)
+    document.getElementById('modalId').click()
+    const modalContent = document.getElementById('modalContent')
+    modalContent.innerHTML= ` 
+
+    <img src="${data.thumbnail}">
+    <p>${data.description}</p>
+    
+    
+    `
+
+}
+
+
 // !onclick end
 
-const loadCategory= async()=>{
+const loadCategory = async () => {
     const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
     const data = await res.json()
     displayCategory(data.categories)
 }
-displayCategory=(datas)=>{
+displayCategory = (datas) => {
     const navContainer = document.getElementById('nav')
     datas.forEach(data => {
         const btnDiv = document.createElement('div')
@@ -57,22 +80,22 @@ const time = (second) => {
     const minutes = Math.floor((second % 3600) / 60);            // Remaining minutes after extracting hours
     const remainingSeconds = Math.floor(second % 60);            // Remaining seconds
 
-   return `${years} year(s) ${days} day(s) ${hours} hour(s) ${minutes} minute(s) ${remainingSeconds} second(s)`
+    return `${years} year(s) ${days} day(s) ${hours} hour(s) ${minutes} minute(s) ${remainingSeconds} second(s)`
 }
 // ! time function end
 
 
 // ! Load all the videos from API 
-const loadVideo = async()=>{
-    const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const loadVideo = async (searchText = "") => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
     const data = await res.json()
     displayVideo(data.videos)
 }
-displayVideo=(datas)=>{
+displayVideo = (datas) => {
     const videoContainer = document.getElementById('videoContainer')
     videoContainer.innerHTML = ""
 
-    if(datas.length === 0){
+    if (datas.length === 0) {
         videoContainer.classList.remove('grid')
         videoContainer.innerHTML = `
         <div class="flex flex-col items-center justify-center ">
@@ -83,13 +106,13 @@ displayVideo=(datas)=>{
         
         `
     }
-    else{
+    else {
         videoContainer.classList.add('grid')
 
     }
 
 
-    datas.forEach(data=>{
+    datas.forEach(data => {
         const card = document.createElement('div')
         card.classList = "card card-compact bg-base-100"
         card.innerHTML = ` <figure class="h-[200px] w-[400px] relative">
@@ -114,25 +137,31 @@ displayVideo=(datas)=>{
  <div class="flex  items-center gap-2"> 
  <p class='text-gray-500' >${data.authors[0].profile_name}</p>
 
- ${data.authors[0].verified === true ? ' <img class="w-5" src="https://img.icons8.com/?size=48&id=98A4yZTt9abw&format=png">' : "" }
+ ${data.authors[0].verified === true ? ' <img class="w-5" src="https://img.icons8.com/?size=48&id=98A4yZTt9abw&format=png">' : ""}
  
 
  </div>
 
-  <p>${data.others.views} views</p>
+   <p> <button onclick="showDetails('${data.video_id}')" class="btn btn-sm btn-error text-white">Details</button> </p>
 
   </div>
 
     
   </div>`
 
-  videoContainer.append(card)
+        videoContainer.append(card)
         console.log(data)
 
 
 
     })
 }
+
+// ! searchInput 
+document.getElementById('searchInput').addEventListener("keyup", (event)=>{
+    loadVideo(event.target.value)
+})
+
 
 
 // ! function calls

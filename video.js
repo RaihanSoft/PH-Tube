@@ -13,23 +13,22 @@ const time = (second) => {
 }
 // ! function two
 
-const removeActive=()=>{
+const removeActive = () => {
     const btns = document.getElementsByClassName('category-btn')
-    for(let btn of btns){
+    for (let btn of btns) {
         btn.classList.remove("active")
     }
 
 
 }
-const loadDetails= async (videoId)=>{
+const loadDetails = async (videoId) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`)
     const data = await res.json()
     displayDetails(data.video)
 
 
 }
-const displayDetails=(data)=>{
-    console.log(data)
+const displayDetails = (data) => {
     const modalContent = document.getElementById('modalContent')
     modalContent.innerHTML = `
     
@@ -45,12 +44,12 @@ const displayDetails=(data)=>{
 }
 
 
-const showCategory= async(id)=>{
+const showCategory = async (id) => {
 
     const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     const data = await res.json()
     displayVideos(data.category)
-    
+
     removeActive()
 
 
@@ -72,11 +71,21 @@ const loadData = async () => {
 
 }
 
+
+      const searchInput = document.getElementById('searchInput').addEventListener("keyup", (e)=>{
+        videoLoad(e.target.value)
+
+
+      })
+
+
+
+
 // ! video load /................................................................................../.
 
-const videoLoad = async () => {
+const videoLoad = async (searchText = "") => {
     try {
-        const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+        const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         const data = await res.json()
         displayVideos(data.videos)
     }
@@ -90,7 +99,7 @@ const videoLoad = async () => {
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('video')
     videoContainer.innerHTML = ''
-    if(videos.length === 0){
+    if (videos.length === 0) {
         videoContainer.classList.remove('grid')
 
         videoContainer.innerHTML = `
@@ -102,14 +111,14 @@ const displayVideos = (videos) => {
         `
         return
     }
-    else{
+    else {
         videoContainer.classList.add("grid")
     }
     videos.forEach(video => {
 
         const card = document.createElement('div')
         card.classList = "card card-compact "
-        card.innerHTML =  `
+        card.innerHTML = `
         <figure class="h-[200px] relative">
     <img
       src="${video.thumbnail}"
@@ -138,7 +147,7 @@ const displayVideos = (videos) => {
 <div class="flex items-center gap-2">
   <p class='text-gray-500'>${video.authors[0].profile_name}</p>
  
-  ${video.authors[0].verified === true ? " <img class='h-5 ' src='https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png'>" :"" }
+  ${video.authors[0].verified === true ? " <img class='h-5 ' src='https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png'>" : ""}
 
 </div>
 
@@ -151,16 +160,13 @@ const displayVideos = (videos) => {
 
   </div>
   `
-  videoContainer.append(card)
+        videoContainer.append(card)
 
         console.log(video)
-
-
 
     })
 
 }
-
 
 
 // ! video load /................................................................................../.
